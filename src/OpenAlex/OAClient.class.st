@@ -54,6 +54,9 @@ OAClient >> get [
 OAClient >> initialize [
 	super initialize.
 	self contentReader: [ :entity |
+		self response isError ifTrue: [
+			self error: (String streamContents: [ :out |
+				self response statusLine writeOn: out ]) ].
 		NeoJSONReader fromString: entity contents ]
 ]
 
