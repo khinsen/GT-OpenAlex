@@ -3,10 +3,24 @@ Class {
 	#superclass : #ZnClient,
 	#instVars : [
 		'oaIcon',
-		'wikiDataIcon'
+		'wikiDataIcon',
+		'mail'
+	],
+	#classInstVars : [
+		'defaultMail'
 	],
 	#category : #OpenAlex
 }
+
+{ #category : #accessing }
+OAClient class >> mail [
+	^ defaultMail
+]
+
+{ #category : #accessing }
+OAClient class >> mail: aString [
+	defaultMail := aString
+]
 
 { #category : #accessing }
 OAClient >> author: aString [
@@ -30,6 +44,13 @@ OAClient >> doi: aString [
 ]
 
 { #category : #accessing }
+OAClient >> get [
+	self mail ifNotNil:
+		[ self queryAt: 'mailto' put: self mail ].
+	^ super get
+]
+
+{ #category : #accessing }
 OAClient >> initialize [
 	super initialize.
 	self contentReader: [ :entity |
@@ -47,6 +68,18 @@ OAClient >> institution: aString [
 { #category : #accessing }
 OAClient >> issn: aString [
 	^ self venue: 'issn:', aString
+]
+
+{ #category : #accessing }
+OAClient >> mail [
+	mail ifNotNil: [ :aString | ^ aString ].
+	self class mail ifNotNil: [ :aString | ^ aString ].
+	^ nil
+]
+
+{ #category : #accessing }
+OAClient >> mail: aString [
+	mail := aString
 ]
 
 { #category : #accessing }
