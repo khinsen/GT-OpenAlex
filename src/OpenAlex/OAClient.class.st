@@ -57,7 +57,7 @@ OAClient >> initialize [
 		self response isError ifTrue: [
 			self error: (String streamContents: [ :out |
 				self response statusLine writeOn: out ]) ].
-		NeoJSONReader fromString: entity contents ]
+		NeoJSONObject fromString: entity contents ]
 ]
 
 { #category : #accessing }

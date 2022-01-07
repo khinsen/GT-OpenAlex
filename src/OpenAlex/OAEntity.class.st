@@ -40,7 +40,7 @@ OAEntity >> gtActionWikiDataFor: anAction [
 OAEntity >> gtConceptsFor: aView [
 	<gtView>
 	| concepts |
-	concepts := rawData at: 'x_concepts'
+	concepts := rawData x_concepts
 		ifAbsent: [ ^ aView empty ].
 	^ aView list
 		title: 'Concepts';
@@ -87,20 +87,20 @@ OAEntity >> gtSummaryFor: aView [
 		title: 'Summary';
 		priority: 0;
 		items: [ self summary ];
-		column: 'Field' text: #key;
-		column: 'Value' text: #value;
+		column: 'Field' text: #key weight: 0.2;
+		column: 'Value' text: #value weight: 0.8;
 		send: [ :each | each value value ];
 		yourself
 ]
 
 { #category : #inspecting }
 OAEntity >> ids [
-	^ rawData at: 'ids'
+	^ rawData ids
 ]
 
 { #category : #accessing }
 OAEntity >> openAlexId [
-	^ OAId fromUrl: (rawData at: #id)
+	^ OAId fromUrl: rawData id
 ]
 
 { #category : #printing }
@@ -109,7 +109,7 @@ OAEntity >> printOn: aStream [
 	aStream nextPut: $(.
 	aStream nextPutAll: self openAlexId.
 	aStream nextPutAll: ', '.
-	aStream nextPutAll: (rawData at: 'display_name').
+	aStream nextPutAll: (rawData display_name).
 	aStream nextPut: $)
 ]
 

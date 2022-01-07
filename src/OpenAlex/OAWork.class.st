@@ -5,15 +5,36 @@ Class {
 }
 
 { #category : #accessing }
+OAWork >> gtRelatedWorksFor: aView [
+	<gtView>
+	^ rawData at: 'related_works'
+		ifPresent: [ :data |
+			aView list
+				title: 'Related';
+				priority: 3;
+				items: [ data collect: [ :each |
+					| id |
+					id := OAId fromUrl: each.
+					OADelayedEntity new
+						openAlexId: id;
+						displayName: id. ] ];
+				send: #value;
+				yourself ]
+		ifAbsent: [ aView empty ]
+]
+
+{ #category : #accessing }
 OAWork >> summary [
 	| summary |
 	summary := OrderedCollection new.
-	(rawData at: 'is_retracted') ifTrue:
+	rawData is_retracted ifTrue:
 		[ summary add:
 			'Status' ->
 				('retracted' asRopedText foreground: Color red) ].
-	summary add: 'Type' -> (rawData at: 'type').
-	summary add: 'Title' ->(rawData at: 'display_name').
+	summary add: 'Type' -> rawData type.
+	summary add: 'Title' ->
+		(rawData at: 'title'
+			ifAbsent: [ rawData display_name ]).
 	rawData at: 'publication_date'
 		ifPresent: [ :date |
 			summary add: 'Date' -> date asDate ]
@@ -25,5 +46,11 @@ OAWork >> summary [
 			summary add:
 				'Venue' ->
 					(OADelayedEntity new rawData: venue ) ].
+	rawData open_access is_oa ifTrue: [
+		summary add:
+			'Open access' ->rawData open_access oa_status.
+		rawData open_access oa_url
+			ifNotNil: [ :url |
+				summary add: 'URL' -> url asZnUrl ] ].
 	^ summary
 ]
