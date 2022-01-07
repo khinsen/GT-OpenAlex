@@ -7,7 +7,7 @@
 ```
 Metacello new
     baseline: 'OpenAlex';
-    repository: 'github://khinsen/OpenAlex:main/src';
+    repository: 'github://khinsen/GT-OpenAlex:main/src';
     load.
 ```
 
