@@ -45,10 +45,10 @@ OAEntity >> gtConceptsFor: aView [
 	^ aView list
 		title: 'Concepts';
 		priority: 4;
-		items: [ concepts ];
-		itemText: [ :each | each at: 'display_name' ];
-		send: [ :each | OAClient new openAlexId:
-							($/ split: (each at: 'id')) last ];
+		items: [ concepts collect: [ :each |
+			OADelayedEntity new
+				rawData: each ] ];
+		send: #value;
 		yourself
 ]
 
@@ -89,6 +89,7 @@ OAEntity >> gtSummaryFor: aView [
 		items: [ self summary ];
 		column: 'Field' text: #key;
 		column: 'Value' text: #value;
+		send: [ :each | each value value ];
 		yourself
 ]
 
@@ -99,7 +100,7 @@ OAEntity >> ids [
 
 { #category : #accessing }
 OAEntity >> openAlexId [
-	^ (#/ split: (rawData at: #id)) last
+	^ OAId fromUrl: (rawData at: #id)
 ]
 
 { #category : #printing }

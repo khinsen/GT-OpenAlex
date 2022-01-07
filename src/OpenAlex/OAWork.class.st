@@ -20,5 +20,10 @@ OAWork >> summary [
 		ifAbsent: [ rawData at: 'publication_year'
 						ifPresent: [ :year |
 							summary add: 'Year' -> Year year: year asNumber ] ].
+	rawData at: 'host_venue'
+		ifPresent: [ :venue |
+			summary add:
+				'Venue' ->
+					(OADelayedEntity new rawData: venue ) ].
 	^ summary
 ]
