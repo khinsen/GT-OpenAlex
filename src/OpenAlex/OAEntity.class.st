@@ -81,6 +81,18 @@ OAEntity >> gtJsonDataFor: aView [
 ]
 
 { #category : #inspecting }
+OAEntity >> gtSummaryFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'Summary';
+		priority: 0;
+		items: [ self summary ];
+		column: 'Field' text: #key;
+		column: 'Value' text: #value;
+		yourself
+]
+
+{ #category : #inspecting }
 OAEntity >> ids [
 	^ rawData at: 'ids'
 ]
@@ -108,4 +120,9 @@ OAEntity >> rawData [
 { #category : #accessing }
 OAEntity >> rawData: aDictionary [
 	rawData := aDictionary
+]
+
+{ #category : #accessing }
+OAEntity >> summary [
+	^ #()
 ]
