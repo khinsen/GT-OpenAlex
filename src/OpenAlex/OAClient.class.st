@@ -24,18 +24,24 @@ OAClient class >> mail: aString [
 
 { #category : #accessing }
 OAClient >> author: aString [
-	^ OAAuthor new rawData:
+	| entity |
+	entity :=  OAAuthor new rawData:
 		(self
 			url: (self oaBaseUrl, 'authors/', aString);
-			get)
+			get).
+	OACache uniqueInstance add: entity.
+	^ entity
 ]
 
 { #category : #accessing }
 OAClient >> concept: aString [
-	^ OAConcept new rawData:
+	| entity |
+	entity := OAConcept new rawData:
 		(self
 			url: (self oaBaseUrl, 'concepts/', aString);
-			get)
+			get).
+	OACache uniqueInstance add: entity.
+	^ entity
 ]
 
 { #category : #accessing }
@@ -62,10 +68,13 @@ OAClient >> initialize [
 
 { #category : #accessing }
 OAClient >> institution: aString [
-	^ OAInstitution new rawData:
+	| entity |
+	entity :=  OAInstitution new rawData:
 		(self
 			url: (self oaBaseUrl, 'institutions/', aString);
-			get)
+			get).
+	OACache uniqueInstance add: entity.
+	^ entity
 ]
 
 { #category : #accessing }
@@ -107,10 +116,15 @@ OAClient >> oaLogo [
 
 { #category : #accessing }
 OAClient >> openAlexId: aString [
-	^ (OAEntity forId: aString ) new rawData:
-		(self
-			url: (self oaBaseUrl, aString);
-			get)
+	| entity |
+	entity := OACache uniqueInstance lookup: aString.
+	entity ifNil: [
+		entity := (OAEntity forId: aString ) new rawData:
+			(self
+				url: (self oaBaseUrl, aString);
+				get).
+	OACache uniqueInstance add: entity ].
+	^ entity
 ]
 
 { #category : #accessing }
@@ -125,10 +139,13 @@ OAClient >> ror: aString [
 
 { #category : #accessing }
 OAClient >> venue: aString [
-	^ OAVenue new rawData:
+	| entity |
+	entity := OAVenue new rawData:
 		(self
 			url: (self oaBaseUrl, 'venues/', aString);
-			get)
+			get).
+	OACache uniqueInstance add: entity.
+	^ entity
 ]
 
 { #category : #accessing }
@@ -147,8 +164,11 @@ OAClient >> wikiDataLogo [
 
 { #category : #accessing }
 OAClient >> work: aString [
-	^ OAWork new rawData:
+	| entity |
+	entity := OAWork new rawData:
 		(self
 			url: (self oaBaseUrl, 'works/', aString);
-			get)
+			get).
+	OACache uniqueInstance add: entity.
+	^ entity
 ]

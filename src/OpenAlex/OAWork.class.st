@@ -15,9 +15,12 @@ OAWork >> gtRelatedWorksFor: aView [
 				items: [ data collect: [ :each |
 					| id |
 					id := OAId fromUrl: each.
-					OADelayedEntity new
-						openAlexId: id;
-						displayName: id. ] ];
+					(OACache uniqueInstance lookup: id)
+						ifNil: [
+							OADelayedEntity new
+								openAlexId: id;
+								displayName: id ]
+						ifNotNil: [ :entity | entity ] ] ];
 				send: #value;
 				yourself ]
 		ifAbsent: [ aView empty ]

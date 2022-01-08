@@ -40,7 +40,7 @@ OAEntity >> gtActionWikiDataFor: anAction [
 OAEntity >> gtConceptsFor: aView [
 	<gtView>
 	| concepts |
-	concepts := rawData x_concepts
+	concepts := rawData at: 'x_concepts'
 		ifAbsent: [ ^ aView empty ].
 	^ aView list
 		title: 'Concepts';
@@ -50,6 +50,11 @@ OAEntity >> gtConceptsFor: aView [
 				rawData: each ] ];
 		send: #value;
 		yourself
+]
+
+{ #category : #printing }
+OAEntity >> gtDisplayOn: aStream [
+	aStream nextPutAll: (rawData display_name)
 ]
 
 { #category : #inspecting }
@@ -126,4 +131,9 @@ OAEntity >> rawData: aDictionary [
 { #category : #accessing }
 OAEntity >> summary [
 	^ #()
+]
+
+{ #category : #accessing }
+OAEntity >> value [
+	^ self
 ]
