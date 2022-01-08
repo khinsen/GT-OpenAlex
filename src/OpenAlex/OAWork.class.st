@@ -5,6 +5,24 @@ Class {
 }
 
 { #category : #accessing }
+OAWork >> gtConceptsFor: aView [
+	<gtView>
+	^ rawData at: 'concepts'
+		ifPresent: [ :data |
+			aView columnedList
+				title: 'Concepts';
+				priority: 4;
+				items: [ data ];
+				column: 'Score' text: #score weight: 0.2;
+				column: 'Name' text: #display_name weight: 0.8;
+				send: [ :each |
+					OAClient new openAlexId:
+						(OAId fromUrl: each id) ];
+				yourself ]
+		ifAbsent: [ aView empty ]
+]
+
+{ #category : #accessing }
 OAWork >> gtRelatedWorksFor: aView [
 	<gtView>
 	^ rawData at: 'related_works'

@@ -9,11 +9,14 @@ OAConcept >> gtRelatedConceptsFor: aView [
 	<gtView>
 	^ rawData at: 'related_concepts'
 		ifPresent: [ :data |
-			aView list
+			aView columnedList
 				title: 'Related';
 				priority: 3;
-				items: [ data collect: [ :each |
-					OADelayedEntity new rawData: each ] ];
+				items: [ data ];
+				column: 'Score' text: #score weight: 0.2;
+				column: 'Name' text: #display_name weight: 0.8;
+				send: [ :each |
+					OADelayedEntity new rawData: each ];
 				yourself ]
 		ifAbsent: [ aView empty ]
 ]
