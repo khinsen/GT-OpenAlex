@@ -63,10 +63,11 @@ OAWork >> summary [
 						ifPresent: [ :year |
 							summary add: 'Year' -> Year year: year asNumber ] ].
 	rawData at: 'host_venue'
-		ifPresent: [ :venue |
+		ifPresent: [ :venue | [
 			summary add:
 				'Venue' ->
-					(OADelayedEntity new rawData: venue ) ].
+					(OADelayedEntity new rawData: venue )
+			] onErrorDo:  [] ].
 	rawData open_access is_oa ifTrue: [
 		summary add:
 			'Open access' ->rawData open_access oa_status.
