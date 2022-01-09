@@ -46,7 +46,7 @@ OAWork >> gtRelatedWorksFor: aView [
 
 { #category : #accessing }
 OAWork >> summary [
-	| summary |
+	| summary authorNumber |
 	summary := OrderedCollection new.
 	rawData is_retracted ifTrue:
 		[ summary add:
@@ -63,16 +63,31 @@ OAWork >> summary [
 						ifPresent: [ :year |
 							summary add: 'Year' -> Year year: year asNumber ] ].
 	rawData at: 'host_venue'
-		ifPresent: [ :venue | [
+		ifPresent: [ :venue |
 			summary add:
 				'Venue' ->
-					(OADelayedEntity new rawData: venue )
-			] onErrorDo:  [] ].
+					([ (OADelayedEntity new rawData: venue ) ]
+					onErrorDo:  [ venue display_name ]) ].
+	rawData at: 'biblio'
+		ifPresent: [ :biblio |
+			| volumeAndIssue |
+			biblio volume ifNotNil: [ :vol |
+				volumeAndIssue := vol asString.
+				biblio issue ifNotNil: [ :issue |
+					volumeAndIssue := volumeAndIssue,
+						' (',  issue asString, ')'].
+				summary add: 'Volume' -> volumeAndIssue ] ].
 	rawData open_access is_oa ifTrue: [
 		summary add:
 			'Open access' ->rawData open_access oa_status.
 		rawData open_access oa_url
 			ifNotNil: [ :url |
 				summary add: 'URL' -> url asZnUrl ] ].
+	authorNumber := 1.
+	rawData authorships do: [ :each |
+		summary add:
+			'Author ', authorNumber asString ->
+				(OADelayedEntity new rawData: each author).
+		authorNumber := authorNumber + 1 ].
 	^ summary
 ]
