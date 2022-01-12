@@ -42,13 +42,13 @@ OAEntity >> gtConceptsFor: aView [
 	| concepts |
 	concepts := rawData at: 'x_concepts'
 		ifAbsent: [ ^ aView empty ].
-	^ aView list
+	^ aView columnedList
 		title: 'Concepts';
 		priority: 4;
-		items: [ concepts collect: [ :each |
-			OADelayedEntity new
-				rawData: each ] ];
-		send: #value;
+		items: [ concepts ];
+		column: 'Score' text: #score weight:0.2;
+		column: 'Name' text: #'display_name' weight: 0.8;
+		send: [ :each | OAClient new openAlexId: each id ];
 		yourself
 ]
 

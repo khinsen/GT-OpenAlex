@@ -29,13 +29,65 @@ OACache >> add: anEntity [
 { #category : #inspecting }
 OACache >> gtAuthorsFor: aView [
 	<gtView>
+	^ self
+		gtEntityListFor: aView
+		class: OAAuthor
+		title: 'Authors'
+		priority: 1
+]
+
+{ #category : #inspecting }
+OACache >> gtConceptsFor: aView [
+	<gtView>
+	^ self
+		gtEntityListFor: aView
+		class: OAConcept
+		title: 'Concepts'
+		priority: 2
+]
+
+{ #category : #accessing }
+OACache >> gtEntityListFor: aView class: aClass title: aString priority: anInteger [
+	| items |
+	items := entitiesByClass at: aClass ifAbsent: [ ^ aView empty ].
+	items ifEmpty: [ ^ aView empty ].
 	^ aView columnedList
-		title: 'Authors';
-		priority: 1;
-		items: [ entitiesByClass at: OAAuthor ];
-		column: 'Id' text: #openAlexId;
-		column: 'Name' text: #displayName;
+		items: items;
+		title: aString;
+		priority: anInteger;
+		column: 'Id' text: #openAlexId width: 100;
+		column: 'Name' text: #gtDisplayString;
 		yourself
+]
+
+{ #category : #inspecting }
+OACache >> gtInstitutionsFor: aView [
+	<gtView>
+	^ self
+		gtEntityListFor: aView
+		class: OAInstitution
+		title: 'Institutions'
+		priority: 3
+]
+
+{ #category : #inspecting }
+OACache >> gtVenuesFor: aView [
+	<gtView>
+	^ self
+		gtEntityListFor: aView
+		class: OAVenue
+		title: 'Venues'
+		priority: 4
+]
+
+{ #category : #inspecting }
+OACache >> gtWorksFor: aView [
+	<gtView>
+	^ self
+		gtEntityListFor: aView
+		class: OAWork
+		title: 'Works'
+		priority: 5
 ]
 
 { #category : #intializing }

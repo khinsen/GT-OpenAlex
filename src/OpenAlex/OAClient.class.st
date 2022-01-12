@@ -57,6 +57,19 @@ OAClient >> get [
 ]
 
 { #category : #accessing }
+OAClient >> getOAEntity [
+	| json |
+	json := self get.
+	(json includesKey: 'meta')
+		ifTrue: [ ^ OAResultList new
+						rawData: json ].
+	(json includesKey: 'id')
+		ifTrue: [ ^ (OAEntity forId: (OAId fromUrl: json id)) new
+						rawData: json ].
+	^ json
+]
+
+{ #category : #accessing }
 OAClient >> initialize [
 	super initialize.
 	self contentReader: [ :entity |
@@ -119,7 +132,7 @@ OAClient >> openAlexId: aString [
 	| entity |
 	entity := OACache uniqueInstance lookup: aString.
 	entity ifNil: [
-		entity := (OAEntity forId: aString ) new rawData:
+		entity := (OAEntity forId: aString) new rawData:
 			(self
 				url: (self oaBaseUrl, aString);
 				get).
