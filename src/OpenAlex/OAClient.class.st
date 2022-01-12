@@ -62,10 +62,12 @@ OAClient >> getOAEntity [
 	json := self get.
 	(json includesKey: 'meta')
 		ifTrue: [ ^ OAResultList new
-						rawData: json ].
+						rawData: json;
+						originUrl: self request url ].
 	(json includesKey: 'id')
 		ifTrue: [ ^ (OAEntity forId: (OAId fromUrl: json id)) new
-						rawData: json ].
+						rawData: json;
+						originUrl: self request url ].
 	^ json
 ]
 

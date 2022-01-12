@@ -2,7 +2,8 @@ Class {
 	#name : #OAEntity,
 	#superclass : #Object,
 	#instVars : [
-		'rawData'
+		'rawData',
+		'originUrl'
 	],
 	#category : #OpenAlex
 }
@@ -106,6 +107,16 @@ OAEntity >> ids [
 { #category : #accessing }
 OAEntity >> openAlexId [
 	^ OAId fromUrl: rawData id
+]
+
+{ #category : #accessing }
+OAEntity >> originUrl [
+	^ originUrl
+]
+
+{ #category : #accessing }
+OAEntity >> originUrl: aZnUrl [
+	originUrl := aZnUrl
 ]
 
 { #category : #printing }

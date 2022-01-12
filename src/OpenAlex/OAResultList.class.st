@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'results',
-		'rawData'
+		'rawData',
+		'originUrl'
 	],
 	#category : #OpenAlex
 }
@@ -34,6 +35,16 @@ OAResultList >> gtResultsFor: aView [
 		object: [ self results ];
 		view: #gtItemsFor:;
 		yourself
+]
+
+{ #category : #accessing }
+OAResultList >> originUrl [
+	^ originUrl
+]
+
+{ #category : #accessing }
+OAResultList >> originUrl: aZnUrl [
+	originUrl := aZnUrl
 ]
 
 { #category : #printing }
