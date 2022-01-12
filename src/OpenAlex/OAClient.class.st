@@ -51,8 +51,11 @@ OAClient >> doi: aString [
 
 { #category : #accessing }
 OAClient >> get [
-	self mail ifNotNil:
-		[ self queryAt: 'mailto' put: self mail ].
+	self mail ifNotNil: [
+		| headers |
+		headers := self request headers.
+		headers at: 'User-Agent' put:
+			(headers at: 'User-Agent'), ' mailto:', self mail ].
 	^ super get
 ]
 
