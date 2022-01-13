@@ -1,8 +1,42 @@
 Class {
 	#name : #OAWork,
 	#superclass : #OAEntity,
+	#instVars : [
+		'citing'
+	],
 	#category : #OpenAlex
 }
+
+{ #category : #accessing }
+OAWork >> citing [
+	^ citing ifNil: [
+		citing := OAClient new
+					url: rawData cited_by_api_url first;
+					getOAEntity ]
+]
+
+{ #category : #accessing }
+OAWork >> gtCitingFor: aView [
+	<gtView>
+	| view |
+	self citing isEmpty ifTrue: [ ^ aView empty ].
+	view := aView list
+		title: 'Citing';
+		priority: 5;
+		items: [ self citing results ];
+		updateWhen: OAMoreResultsEvent in: [ self citing announcer ]
+		yourself.
+	self citing isComplete ifFalse: [
+		view
+			actionButtonIcon: BrGlamorousVectorIcons add
+			tooltip: 'More'
+			action: [ self citing loadMore ].
+		 view
+			actionButtonIcon: BrGlamorousVectorIcons play
+			tooltip: 'All'
+			action: [ self citing loadAll ] ].
+	^ view
+]
 
 { #category : #accessing }
 OAWork >> gtConceptsFor: aView [
@@ -11,13 +45,35 @@ OAWork >> gtConceptsFor: aView [
 		ifPresent: [ :data |
 			aView columnedList
 				title: 'Concepts';
-				priority: 4;
+				priority: 6;
 				items: [ data ];
 				column: 'Score' text: #score weight: 0.2;
 				column: 'Name' text: #display_name weight: 0.8;
 				send: [ :each |
 					OAClient new openAlexId:
 						(OAId fromUrl: each id) ];
+				yourself ]
+		ifAbsent: [ aView empty ]
+]
+
+{ #category : #accessing }
+OAWork >> gtReferencedWorksFor: aView [
+	<gtView>
+	^ rawData at: 'referenced_works'
+		ifPresent: [ :data |
+			aView list
+				title: 'Referenced';
+				priority: 4;
+				items: [ data collect: [ :each |
+					| id |
+					id := OAId fromUrl: each.
+					(OACache uniqueInstance lookup: id)
+						ifNil: [
+							OADelayedEntity new
+								openAlexId: id;
+								displayName: id ]
+						ifNotNil: [ :entity | entity ] ] ];
+				send: #value;
 				yourself ]
 		ifAbsent: [ aView empty ]
 ]

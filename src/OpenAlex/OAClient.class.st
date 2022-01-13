@@ -24,24 +24,14 @@ OAClient class >> mail: aString [
 
 { #category : #accessing }
 OAClient >> author: aString [
-	| entity |
-	entity :=  OAAuthor new rawData:
-		(self
-			url: (self oaBaseUrl, 'authors/', aString);
-			get).
-	OACache uniqueInstance add: entity.
-	^ entity
+	self url: self oaBaseUrl, 'authors/', aString.
+	^ self getOAEntity
 ]
 
 { #category : #accessing }
 OAClient >> concept: aString [
-	| entity |
-	entity := OAConcept new rawData:
-		(self
-			url: (self oaBaseUrl, 'concepts/', aString);
-			get).
-	OACache uniqueInstance add: entity.
-	^ entity
+	self url: self oaBaseUrl, 'concepts/', aString.
+	^ self getOAEntity
 ]
 
 { #category : #accessing }
@@ -63,14 +53,17 @@ OAClient >> get [
 OAClient >> getOAEntity [
 	| json |
 	json := self get.
-	(json includesKey: 'meta')
-		ifTrue: [ ^ OAResultList new
-						rawData: json;
-						originUrl: self request url ].
-	(json includesKey: 'id')
-		ifTrue: [ ^ (OAEntity forId: (OAId fromUrl: json id)) new
-						rawData: json;
-						originUrl: self request url ].
+	(json includesKey: 'meta') ifTrue: [
+		^ OASearchResults new
+			rawData: json;
+			originUrl: self request url ].
+	(json includesKey: 'id') ifTrue: [
+		| entity |
+		entity := (OAEntity forId: (OAId fromUrl: json id)) new
+					rawData: json;
+					originUrl: self request url.
+		OACache uniqueInstance add: entity.
+		^ entity ].
 	^ json
 ]
 
@@ -86,13 +79,8 @@ OAClient >> initialize [
 
 { #category : #accessing }
 OAClient >> institution: aString [
-	| entity |
-	entity :=  OAInstitution new rawData:
-		(self
-			url: (self oaBaseUrl, 'institutions/', aString);
-			get).
-	OACache uniqueInstance add: entity.
-	^ entity
+	self url: self oaBaseUrl, 'institutions/', aString.
+	^ self getOAEntity
 ]
 
 { #category : #accessing }
@@ -157,13 +145,8 @@ OAClient >> ror: aString [
 
 { #category : #accessing }
 OAClient >> venue: aString [
-	| entity |
-	entity := OAVenue new rawData:
-		(self
-			url: (self oaBaseUrl, 'venues/', aString);
-			get).
-	OACache uniqueInstance add: entity.
-	^ entity
+	self url: self oaBaseUrl, 'venues/', aString.
+	^ self getOAEntity
 ]
 
 { #category : #accessing }
@@ -182,11 +165,6 @@ OAClient >> wikiDataLogo [
 
 { #category : #accessing }
 OAClient >> work: aString [
-	| entity |
-	entity := OAWork new rawData:
-		(self
-			url: (self oaBaseUrl, 'works/', aString);
-			get).
-	OACache uniqueInstance add: entity.
-	^ entity
+	self url: self oaBaseUrl, 'works/', aString.
+	^ self getOAEntity
 ]

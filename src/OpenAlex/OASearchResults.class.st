@@ -1,5 +1,5 @@
 Class {
-	#name : #OAResultList,
+	#name : #OASearchResults,
 	#superclass : #Object,
 	#instVars : [
 		'results',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #accessing }
-OAResultList >> addResults: aCollection [
+OASearchResults >> addResults: aCollection [
 	aCollection do: [ :each |
 		| entity |
 		entity := (OAEntity forId: (OAId fromUrl: each id)) new
@@ -21,24 +21,24 @@ OAResultList >> addResults: aCollection [
 ]
 
 { #category : #announcer }
-OAResultList >> announcer [
+OASearchResults >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
 { #category : #accessing }
-OAResultList >> count [
+OASearchResults >> count [
 	^ rawData meta count
 ]
 
 { #category : #accessing }
-OAResultList >> currentPage [
+OASearchResults >> currentPage [
 	^ rawData
 		ifNil: [ 0 ]
 		ifNotNil: [ rawData meta page ]
 ]
 
 { #category : #inspecting }
-OAResultList >> gtJsonDataFor: aView [
+OASearchResults >> gtJsonDataFor: aView [
 	<gtView>
 	^ aView forward
 		title: 'JSON Data';
@@ -49,7 +49,7 @@ OAResultList >> gtJsonDataFor: aView [
 ]
 
 { #category : #inspecting }
-OAResultList >> gtResultsFor: aView [
+OASearchResults >> gtResultsFor: aView [
 	<gtView>
 	| view |
 	self results ifEmpty: [ ^ aView empty ].
@@ -72,27 +72,27 @@ OAResultList >> gtResultsFor: aView [
 ]
 
 { #category : #initializing }
-OAResultList >> initialize [
+OASearchResults >> initialize [
 	results := OrderedCollection new
 ]
 
 { #category : #inspecting }
-OAResultList >> isComplete [
+OASearchResults >> isComplete [
 	^ self size = self totalSize
 ]
 
 { #category : #testing }
-OAResultList >> isEmpty [
+OASearchResults >> isEmpty [
 	^ self size = 0
 ]
 
 { #category : #inspecting }
-OAResultList >> loadAll [
+OASearchResults >> loadAll [
 	[ self isComplete ] whileFalse: [ self loadMore ]
 ]
 
 { #category : #inspecting }
-OAResultList >> loadMore [
+OASearchResults >> loadMore [
 	| data |
 	self size = self totalSize ifTrue: [ ^ nil ].
 	data := OAClient new
@@ -104,17 +104,17 @@ OAResultList >> loadMore [
 ]
 
 { #category : #accessing }
-OAResultList >> originUrl [
+OASearchResults >> originUrl [
 	^ originUrl
 ]
 
 { #category : #accessing }
-OAResultList >> originUrl: aZnUrl [
+OASearchResults >> originUrl: aZnUrl [
 	originUrl := aZnUrl
 ]
 
 { #category : #printing }
-OAResultList >> printOn: aStream [
+OASearchResults >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(.
 	self size printOn: aStream.
@@ -124,7 +124,7 @@ OAResultList >> printOn: aStream [
 ]
 
 { #category : #accessing }
-OAResultList >> rawData: aDictionary [
+OASearchResults >> rawData: aDictionary [
 	| page |
 	page := self currentPage.
 	rawData := aDictionary.
@@ -133,16 +133,16 @@ OAResultList >> rawData: aDictionary [
 ]
 
 { #category : #accessing }
-OAResultList >> results [
+OASearchResults >> results [
 	^ results
 ]
 
 { #category : #accessing }
-OAResultList >> size [
+OASearchResults >> size [
 	^ results size
 ]
 
 { #category : #accessing }
-OAResultList >> totalSize [
+OASearchResults >> totalSize [
 	^ rawData meta count
 ]
