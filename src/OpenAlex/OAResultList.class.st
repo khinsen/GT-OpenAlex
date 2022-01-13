@@ -81,6 +81,11 @@ OAResultList >> isComplete [
 	^ self size = self totalSize
 ]
 
+{ #category : #testing }
+OAResultList >> isEmpty [
+	^ self size = 0
+]
+
 { #category : #inspecting }
 OAResultList >> loadAll [
 	[ self isComplete ] whileFalse: [ self loadMore ]
