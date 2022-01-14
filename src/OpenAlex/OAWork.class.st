@@ -12,30 +12,21 @@ OAWork >> citing [
 	^ citing ifNil: [
 		citing := OAClient new
 					url: rawData cited_by_api_url first;
-					getOAEntity ]
+					getOAEntity.
+		citing loadAll.
+		citing ]
 ]
 
 { #category : #accessing }
 OAWork >> gtCitingFor: aView [
 	<gtView>
-	| view |
 	self citing isEmpty ifTrue: [ ^ aView empty ].
-	view := aView list
+	^ aView list
 		title: 'Citing';
 		priority: 5;
 		items: [ self citing results ];
 		updateWhen: OAMoreResultsEvent in: [ self citing announcer ]
-		yourself.
-	self citing isComplete ifFalse: [
-		view
-			actionButtonIcon: BrGlamorousVectorIcons add
-			tooltip: 'More'
-			action: [ self citing loadMore ].
-		 view
-			actionButtonIcon: BrGlamorousVectorIcons play
-			tooltip: 'All'
-			action: [ self citing loadAll ] ].
-	^ view
+		yourself
 ]
 
 { #category : #accessing }
