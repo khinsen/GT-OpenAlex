@@ -24,11 +24,31 @@ OAEntity class >> forId: aString [
 ]
 
 { #category : #accessing }
+OAEntity >> displayName [
+	^ rawData display_name
+]
+
+{ #category : #accessing }
+OAEntity >> gtActionHomePageFor: anAction [
+	<gtAction>
+	|  url |
+	url := rawData homepage_url
+			ifNil: [ ^ anAction noAction ].
+	^ anAction explicit stencil: [
+		BrButton new
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			action:  [ WebBrowser openOn: url ];
+			icon:BrGlamorousIcons go asElement;
+			label: 'Open home page' translated ]
+]
+
+{ #category : #accessing }
 OAEntity >> gtActionWikiDataFor: anAction [
 	<gtAction>
 	|  url |
 	url := rawData at: 'wikidata'
-			ifAbsent: [ ^ anAction noAction ].
+			ifAbsent: [ rawData ids wikidata
+						ifNil: [ ^ anAction noAction ] ].
 	^ anAction explicit stencil: [
 		BrButton new
 			aptitude: BrGlamorousButtonWithIconAptitude;

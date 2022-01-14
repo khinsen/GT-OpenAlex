@@ -7,16 +7,29 @@ Class {
 	#category : #OpenAlex
 }
 
-{ #category : #accessing }
+{ #category : #inspecting }
 OAAuthor >> gtWorksFor: aView [
 	<gtView>
 	self works isEmpty ifTrue: [ ^ aView empty ].
-	^ aView list
+	^ aView columnedList
 		title: 'Works';
 		priority: 2;
 		items: [ self works results ];
-		updateWhen: OAMoreResultsEvent in: [ self works announcer ]
+		column: 'Year' text: #year width: 50;
+		column: 'Name' text: #displayName;
 		yourself
+]
+
+{ #category : #accessing }
+OAAuthor >> summary [
+	| summary |
+	summary := OrderedCollection new.
+	summary add: 'Name' -> rawData display_name.
+	rawData last_known_institution ifNotNil: [ :institution |
+		summary add: 'Institution' -> 
+			([ (OADelayedEntity new rawData: institution ) ]
+				onErrorDo:  [ institution display_name ])].
+	^ summary.
 ]
 
 { #category : #accessing }

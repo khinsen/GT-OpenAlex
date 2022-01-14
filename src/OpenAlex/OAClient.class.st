@@ -29,6 +29,12 @@ OAClient >> author: aString [
 ]
 
 { #category : #accessing }
+OAClient >> authorSearch: aString [
+	self url: self oaBaseUrl, 'authors?filter=display_name.search:', aString.
+	^ self getOAEntity
+]
+
+{ #category : #accessing }
 OAClient >> concept: aString [
 	self url: self oaBaseUrl, 'concepts/', aString.
 	^ self getOAEntity

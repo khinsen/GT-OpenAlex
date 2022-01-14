@@ -18,6 +18,20 @@ OAWork >> citing [
 ]
 
 { #category : #accessing }
+OAWork >> date [
+	^ rawData at: 'publication_date'
+		ifPresent: [ :date | date asDate ]
+		ifAbsent: [ rawData at: 'publication_year'
+						ifPresent: [ :year |
+							 Year year: year asNumber ] ]
+]
+
+{ #category : #accessing }
+OAWork >> doiUrl [
+	^ rawData ids doi ifNotNil: [ :url | url asZnUrl ]
+]
+
+{ #category : #accessing }
 OAWork >> gtCitingFor: aView [
 	<gtView>
 	self citing isEmpty ifTrue: [ ^ aView empty ].
@@ -126,7 +140,9 @@ OAWork >> summary [
 				summary add: 'Volume' -> volumeAndIssue ] ].
 	rawData open_access is_oa ifTrue: [
 		summary add:
-			'Open access' ->rawData open_access oa_status.
+			'Open access' ->
+				(rawData open_access oa_status
+					ifNil: [ 'yes' ]).
 		rawData open_access oa_url
 			ifNotNil: [ :url |
 				summary add: 'URL' -> url asZnUrl ] ].
@@ -137,4 +153,9 @@ OAWork >> summary [
 				(OADelayedEntity new rawData: each author).
 		authorNumber := authorNumber + 1 ].
 	^ summary
+]
+
+{ #category : #accessing }
+OAWork >> year [
+	^ self date year
 ]

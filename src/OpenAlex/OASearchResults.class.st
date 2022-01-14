@@ -25,6 +25,12 @@ OASearchResults >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
 ]
 
+{ #category : #inspecting }
+OASearchResults >> containsWorks [
+	self isEmpty ifTrue: [ ^ false ].
+	^ self results first isKindOf: OAWork.
+]
+
 { #category : #accessing }
 OASearchResults >> count [
 	^ rawData meta count
@@ -52,8 +58,13 @@ OASearchResults >> gtJsonDataFor: aView [
 OASearchResults >> gtResultsFor: aView [
 	<gtView>
 	| view |
-	self results ifEmpty: [ ^ aView empty ].
-	view := aView list
+	self results isEmpty ifTrue: [ ^ aView empty ].
+	view := self containsWorks
+		ifTrue: [ aView columnedList
+					column: 'Year' text: #year width: 50;
+					column: 'Name' text: #displayName ]
+		ifFalse: [ aView list ].
+	view
 		title: 'Results';
 		priority: 0;
 		items: [ self results ];
