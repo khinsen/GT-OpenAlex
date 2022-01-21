@@ -69,7 +69,9 @@ OAEntity >> gtConceptsFor: aView [
 		items: [ concepts ];
 		column: 'Score' text: #score weight:0.2;
 		column: 'Name' text: #'display_name' weight: 0.8;
-		send: [ :each | OAClient new openAlexId: each id ];
+		send: [ :each |
+			OAClient new openAlexId:
+				(OAId fromUrl: each id) ];
 		yourself
 ]
 
