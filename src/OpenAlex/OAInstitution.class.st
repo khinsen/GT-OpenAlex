@@ -8,6 +8,18 @@ Class {
 }
 
 { #category : #inspecting }
+OAInstitution >> gtImageFor: aView [
+	<gtView>
+	^ self image
+		ifNil: [ aView empty ]
+		ifNotNil: [ :image |
+			aView explicit
+			title: 'Image';
+			priority: 6;
+			stencil: [ image asElement asScrollableElement ] ]
+]
+
+{ #category : #inspecting }
 OAInstitution >> gtWorksFor: aView [
 	<gtView>
 	| view |
@@ -30,6 +42,20 @@ OAInstitution >> gtWorksFor: aView [
 			tooltip: 'All'
 			action: [ self works loadAll ] ].
 	^ view
+]
+
+{ #category : #accessing }
+OAInstitution >> image [
+	| url |
+	url := rawData image_url.
+	url ifNil: [ ^ nil ].
+	(url asLowercase endsWith: '.png') ifTrue: [
+		^ ZnEasy getPng: url ].
+	(url asLowercase endsWith: '.gif') ifTrue: [
+		^ ZnEasy getGif: url ].
+	(url asLowercase endsWithAnyOf: { '.jpg'. '.jpeg' }) ifTrue: [
+		^ ZnEasy getJpeg: url ].
+	^ nil
 ]
 
 { #category : #accessing }
