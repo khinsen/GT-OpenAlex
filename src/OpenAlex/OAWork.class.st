@@ -11,7 +11,7 @@ Class {
 OAWork >> citing [
 	^ citing ifNil: [
 		citing := OAClient new
-					url: rawData cited_by_api_url first;
+					url: rawData cited_by_api_url;
 					getOAEntity.
 		citing loadAll.
 		citing ]
