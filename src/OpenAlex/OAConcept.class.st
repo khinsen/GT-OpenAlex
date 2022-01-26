@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+OAConcept >> endpoint [
+	^ 'https://api.openalex.org/concepts/'
+]
+
+{ #category : #accessing }
 OAConcept >> gtRelatedConceptsFor: aView [
 	<gtView>
 	^ rawData at: 'related_concepts'

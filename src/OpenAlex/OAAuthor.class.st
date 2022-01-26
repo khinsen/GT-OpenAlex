@@ -7,6 +7,11 @@ Class {
 	#category : #OpenAlex
 }
 
+{ #category : #accessing }
+OAAuthor >> endpoint [
+	^ 'https://api.openalex.org/authors/'
+]
+
 { #category : #inspecting }
 OAAuthor >> gtWorksFor: aView [
 	<gtView>

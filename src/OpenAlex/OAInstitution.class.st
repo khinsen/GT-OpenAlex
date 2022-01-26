@@ -7,6 +7,11 @@ Class {
 	#category : #OpenAlex
 }
 
+{ #category : #accessing }
+OAInstitution >> endpoint [
+	^ 'https://api.openalex.org/institutions/'
+]
+
 { #category : #inspecting }
 OAInstitution >> gtImageFor: aView [
 	<gtView>

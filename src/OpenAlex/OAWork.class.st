@@ -32,6 +32,11 @@ OAWork >> doiUrl [
 ]
 
 { #category : #accessing }
+OAWork >> endpoint [
+	^ 'https://api.openalex.org/works/'
+]
+
+{ #category : #accessing }
 OAWork >> gtCitingFor: aView [
 	<gtView>
 	self citing isEmpty ifTrue: [ ^ aView empty ].

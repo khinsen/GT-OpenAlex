@@ -29,6 +29,11 @@ OAEntity >> displayName [
 ]
 
 { #category : #accessing }
+OAEntity >> endpoint [
+	self subclassResponsibility
+]
+
+{ #category : #inspecting }
 OAEntity >> gtActionHomePageFor: anAction [
 	<gtAction>
 	|  url |
@@ -42,7 +47,23 @@ OAEntity >> gtActionHomePageFor: anAction [
 			label: 'Open home page' translated ]
 ]
 
-{ #category : #accessing }
+{ #category : #inspecting }
+OAEntity >> gtActionRefreshFor: anAction [
+	<gtAction>
+	^ anAction explicit stencil: [
+		BrButton new
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			action:  [
+				| json |
+				json := OAClient new
+					url: self originUrl;
+					get.
+				self rawData: json ];
+			icon: BrGlamorousVectorIcons refresh asElement;
+			label: 'Refresh' translated ]
+]
+
+{ #category : #inspecting }
 OAEntity >> gtActionWikiDataFor: anAction [
 	<gtAction>
 	|  url |
@@ -133,7 +154,10 @@ OAEntity >> openAlexId [
 
 { #category : #accessing }
 OAEntity >> originUrl [
-	^ originUrl
+	^ originUrl ifNil: [
+		| id |
+		id := OAId fromUrl: rawData id.
+		self endpoint, id ]
 ]
 
 { #category : #accessing }
