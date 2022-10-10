@@ -171,7 +171,8 @@ OAEntity >> printOn: aStream [
 	aStream nextPut: $(.
 	aStream nextPutAll: self openAlexId.
 	aStream nextPutAll: ', '.
-	aStream nextPutAll: (rawData display_name).
+	rawData display_name ifNotNil: [ :s |
+		aStream nextPutAll: s ].
 	aStream nextPut: $)
 ]
 
